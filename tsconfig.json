@@ -2,16 +2,15 @@
     "compileOnSave": true,
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "target": "es2016",
         "moduleResolution": "node",
         "noImplicitAny": true,
         "removeComments": true,
-        "preserveConstEnums": true,
-        
+        "experimentalDecorators": true,
         "typeRoots": [
             "src"
         ],
-        //"outFile": "./dist/grid.js",
+        "baseUrl": "src",
         "sourceMap": true,
         "types": [
             "node", "mocha", "chai"

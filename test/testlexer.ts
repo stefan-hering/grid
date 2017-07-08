@@ -1,9 +1,10 @@
 import {lexGridCell} from "../src/lexer";
-import 'mocha'; 
+import { suite, test, slow, timeout } from "mocha-typescript";
 
 
-describe("Lexer", () => {
-    it("Should parse grid cells into tokens", () => {
+suite("Lexer", () => {
+    test("Should parse grid cells into tokens", () => {
         lexGridCell("test");
+        console.log(lexGridCell("i\ni = 3 left\n i = 5 right"));
     });
 });

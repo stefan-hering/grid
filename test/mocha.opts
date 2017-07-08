@@ -1,2 +1,3 @@
 --require source-map-support/register
-test/testlexer.js
+--require ts-node/register 
+test/testlexer.ts
