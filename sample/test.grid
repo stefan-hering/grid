@@ -1,0 +1,21 @@
+                |i:int           |                
+                |print i         |                
+                |down(i-1)       |                
+                |                |                
+                |                |                
+                |                |                
+----------------+----------------+----------------
+i:int           |i:int           |i:int           
+print "Fizz"    |i=0 end         |print "FizzBuzz"
+right(i-1)      |i%15=0 right(i) |print "Buzz"    
+                |i%5=0 down(i)   |left(i-1)       
+                |i%3=0 left(i)   |                
+                |down(i)         |                
+----------------+----------------+----------------
+                |i:int           |                
+                |print "Buzz"    |                
+                |up(i-1)         |                
+                |                |                
+                |                |                
+                |                |                
+goto(1,1,100)
