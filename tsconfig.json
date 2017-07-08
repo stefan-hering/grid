@@ -1,0 +1,27 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        
+        "typeRoots": [
+            "src"
+        ],
+        //"outFile": "./dist/grid.js",
+        "sourceMap": true,
+        "types": [
+            "node", "mocha", "chai"
+        ]
+    },
+    "include": [
+        "src/**/*.ts",
+        "test/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules/**"
+    ]
+}

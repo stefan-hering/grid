@@ -1,0 +1,35 @@
+{
+  "name": "grid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "tsc",
+    "test2": "mocha -r ts-node/register src/**/test.ts",
+    "test": "nyc mocha",
+    "prepare": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefan-hering/grid.git"
+  },
+  "author": "Stefan Hering",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/stefan-hering/grid/issues"
+  },
+  "homepage": "https://github.com/stefan-hering/grid#readme",
+  "dependencies": {
+    "mocha": "^3.4.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.1",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.7",
+    "chai": "^4.0.2",
+    "lex": "^1.7.9",
+    "nyc": "^11.0.3",
+    "ts-node": "^3.2.0",
+    "typescript": "^2.4.1"
+  }
+}
