@@ -1,4 +1,4 @@
-import {lexGridCell} from "../src/lexer";
+import {lexGridCell} from "../src/lexer/lexer";
 import { suite, test, slow, timeout } from "mocha-typescript";
 
 

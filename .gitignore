@@ -1,7 +1,7 @@
 node_modules
 .vscode
 .nyc_output
-src/*.js
-src/*.js.map
-test/*.js
-test/*.js.map
+src/**/*.js
+src/**/*.js.map
+test/**/*.js
+test/**/*.js.map

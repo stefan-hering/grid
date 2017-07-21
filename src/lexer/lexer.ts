@@ -29,4 +29,4 @@ function lexGridCell(input : String) : Token[]{
     return tokens;
 }
 
-export {Token,TokenType,lexGridCell};
+export {lexGridCell};
