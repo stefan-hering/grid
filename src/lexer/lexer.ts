@@ -40,7 +40,7 @@ let rules : Rule[] = [
 
 function lexGridCell(input : String) : String[]{
     let tokens : String[] = [];
-    var l:GridLexer = new GridLexer;
+    let l:GridLexer = new GridLexer;
     l.setInput(input);
     let token : String = l.lex();
     while(token !== EOF){
