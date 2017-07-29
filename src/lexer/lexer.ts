@@ -2,6 +2,8 @@ import {Lexer as LexType} from "./lex";
 import {Token, TokenType} from "./lextoken";
 let Lexer = require("lex");
 
+const EOF = "EOF";
+
 class Rule {
     constructor(public readonly regex: RegExp, 
         public readonly matchFunction:(result :String)  => Token){
@@ -15,36 +17,37 @@ let rules : Rule[] = [
     new Rule(/(<|>|>=|<=|=)/,(result) => {
         return new Token(result,TokenType.COMPARE_OPERATOR);
     }),
+    new Rule(/\,/,(result) => {
+        return new Token(result,TokenType.SEPARATOR);
+    }),
     new Rule(/(\/|\*|\-|\+)/,(result) => {
         return new Token(result,TokenType.MATH_OPERATOR);
     }),
     new Rule(/[a-zA-Z\_]{1}[a-zA-Z0-9\_\-]*/,(result) => {
-        return new Token("VAR",TokenType.IDENTIFIER);
+        return new Token(result,TokenType.IDENTIFIER);
     }),
     new Rule(/\-?[0-9]+/,(result) => {
-        return new Token("NUMBER",TokenType.NUMBER);
+        return new Token(result,TokenType.NUMBER);
     }),
-    new Rule(/[ \t\n]+/,(result) => {
-        return new Token(null,TokenType.WHITESPACE);
+    new Rule(/\"[^"^\n]*\"/,(result) => {
+        return new Token(result,TokenType.STRING);
     }),
-    new Rule(/$/,(result) => {
-        return new Token("EOF",TokenType.WHITESPACE);
+    new Rule(/\s+/,(result) => {
+        return new Token("",TokenType.WHITESPACE);
     })
 ];
 
 
-function lexGridCell(input : String) : Token[]{
-    let tokens : Token[] = [];
-    var l:LexType = new Lexer;
-    for(let rule of rules){
-        l.addRule(rule.regex, rule.matchFunction);
-    }
+function lexGridCell(input : String) : String[]{
+    let tokens : String[] = [];
+    var l:GridLexer = new GridLexer;
     l.setInput(input);
-    let token : Token = l.lex();
-    while(token){
+    let token : String = l.lex();
+    while(token !== EOF){
         tokens.push(token);
         token = l.lex();
     }
+    tokens.push(token);
     return tokens;
 }
 
@@ -63,7 +66,15 @@ class GridLexer {
         this.lexer.setInput(input);
     }
     public lex(): String {
-        return this.lexer.lex().token;
+        let token = this.lexer.lex();
+        if(token == null){
+            return EOF;
+        }
+        if(token.type == TokenType.WHITESPACE){
+            return this.lex();
+        } else {
+            return token.token;
+        }
     }
 }
 

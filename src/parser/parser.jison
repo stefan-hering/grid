@@ -1,16 +1,43 @@
+%lex
+
+%%
+
+(left|right|up|down|end|print)      return 'DIRECTION';
+(\<|\>|\>\=|\<\=|\=)                return 'COMPARE';
+\,                                  return ',';
+\/                                  return '/';
+\*                                  return '*';
+\-                                  return '-';
+\+                                  return '+';
+[a-zA-Z\_]{1}[a-zA-Z0-9\_\-]*       return 'VAR';
+\-?[0-9]+                           return 'NUMBER';
+\s+                                 return '';
+<<EOF>>                             return 'EOF';
+
+/lex
+
 
 /* operator associations and precedence */
 
 %left '+' '-'
 %left '*' '/'
 
-%start expressions
+%start gridcell
 
 %% /* language grammar */
 
-expressions
-    : me EOF
-        {print($1); return $1;}
+gridcell
+    : declarations EOF
+        {$$ = $1}
+    | EOF
+        {'empty cell'}
+    ;
+
+declarations
+    : VAR ',' declarations
+        {$$ = $1,$3}
+    | VAR
+        {$$ = $1}
     ;
 
 me
@@ -30,7 +57,14 @@ me
         {$$ = Number(yytext);}
     ;
 
+meseq
+    : me ',' me
+        {$$ = $1,$3}
+    | me
+        {$$ = $1}
+    ;
+
 function
-    : direction '(' me ')'
-        {$$ = yytext $3;}
+    : direction '(' meseq ')'
+        {$$ = $3;}
     ;

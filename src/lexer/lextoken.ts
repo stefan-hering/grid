@@ -6,6 +6,8 @@ export enum TokenType{
     MATH_OPERATOR,
     WHITESPACE,
     NUMBER,
+    SEPARATOR,
+    STRING,
     EOF
 }
 
