@@ -1,9 +1,9 @@
 
-class Grid {
+export class Grid {
     private grid : Block[][];
 }
 
 
-class Block {
+export class Block {
     private instructions : String[];
 }

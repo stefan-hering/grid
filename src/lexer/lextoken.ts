@@ -1,10 +1,12 @@
 
 export enum TokenType{
     DIRECTION,
-    VARIABLE,
+    IDENTIFIER,
     COMPARE_OPERATOR,
     MATH_OPERATOR,
-    WHITESPACE
+    WHITESPACE,
+    NUMBER,
+    EOF
 }
 
 export class Token {
