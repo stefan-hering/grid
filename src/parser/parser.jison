@@ -25,6 +25,7 @@
 
 %left '+' '-'
 %left '*' '/'
+%left '%'
 
 %start gridcell
 
