@@ -8,6 +8,7 @@ export enum TokenType{
     NUMBER,
     SEPARATOR,
     STRING,
+    BRACKET,
     EOF
 }
 

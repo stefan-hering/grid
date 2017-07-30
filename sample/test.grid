@@ -1,20 +1,20 @@
-                 |i                |                 
-                 |print i          |                 
-                 |down(i-1)        |                 
+                 |i,j              |                 
+                 |print(i)         |                 
+                 |down(i+1,j)      |                 
                  |                 |                 
                  |                 |                 
                  |                 |                 
 -----------------+-----------------+-----------------
-i                |i                |i                
-print "Fizz"     |i=0 end          |print("FizzBuzz")
-right(i-1)       |i%15=0 right(i)  |print("Buzz")    
-                 |i%5=0 down(i)    |left(i-1)        
-                 |i%3=0 left(i)    |                 
-                 |down(i)          |                 
+i,j              |i,j              |i,j             
+print("Fizz")    |i=j end()        |print("FizzBuzz")
+right(i+1,j)     |i%15=0 right(i,j)|print("Buzz")    
+                 |i%5=0 down(i,j)  |left(i+1,j)      
+                 |i%3=0 left(i,j)  |                 
+                 |down(i,j)        |                 
 -----------------+-----------------+-----------------
-                 |i                |                 
-                 |print "Buzz"     |                 
-                 |up(i-1)          |                 
+                 |i,j              |                 
+                 |print("Buzz")    |                 
+                 |up(i+1,j)        |                 
                  |                 |                 
                  |                 |                 
                  |                 |                 

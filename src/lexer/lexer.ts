@@ -14,13 +14,16 @@ let rules : Rule[] = [
     new Rule(/(left|right|up|down|end|print)/,(result) => {
         return new Token(result,TokenType.DIRECTION);
     }),
+    new Rule(/(\(|\))/,(result) => {
+        return new Token(result,TokenType.BRACKET);
+    }),
     new Rule(/(<|>|>=|<=|=)/,(result) => {
         return new Token(result,TokenType.COMPARE_OPERATOR);
     }),
     new Rule(/\,/,(result) => {
         return new Token(result,TokenType.SEPARATOR);
     }),
-    new Rule(/(\/|\*|\-|\+)/,(result) => {
+    new Rule(/(\/|\*|\-|\+|\%)/,(result) => {
         return new Token(result,TokenType.MATH_OPERATOR);
     }),
     new Rule(/[a-zA-Z\_]{1}[a-zA-Z0-9\_\-]*/,(result) => {

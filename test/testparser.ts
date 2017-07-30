@@ -6,7 +6,7 @@ suite("Parse", () => {
     test("Should parse stuff", () => {
         let parser = getParser();
         let x = parser.parse("");
-        //x = getParser().parse("i");
-        //x = getParser().parse("i\ni = 3 left\n i = 5 right");
+        x = parser.parse("i down(i)");
+        x = parser.parse("i\ni = 3 left()\n i = 5 right()");
     });
 });
