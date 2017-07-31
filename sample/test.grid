@@ -10,7 +10,7 @@ print("Fizz")    |i=j end()        |print("FizzBuzz")
 right(i+1,j)     |i%15=0 right(i,j)|print("Buzz")    
                  |i%5=0 down(i,j)  |left(i+1,j)      
                  |i%3=0 left(i,j)  |                 
-                 |down(i,j)        |                 
+                 |up(i,j)          |                 
 -----------------+-----------------+-----------------
                  |i,j              |                 
                  |print("Buzz")    |                 
