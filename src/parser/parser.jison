@@ -3,29 +3,29 @@
 %%
 
 \s+                                 /* Whitespace */;
-(left|right|up|down|end|print)      return 'DIRECTION';
-(\<|\>|\>\=|\<\=|\=)                return 'COMPARE';
-\,                                  return ',';
-\/                                  return '/';
-\*                                  return '*';
-\-                                  return '-';
-\+                                  return '+';
-\%                                  return '%';
-\(                                  return '(';
-\)                                  return ')';
-[a-zA-Z\_]{1}[a-zA-Z0-9\_\-]*       return 'VAR';
-\-?[0-9]+                           return 'NUMBER';
-\"[^"]+\"                           yytext = yytext.slice(1,-1); return 'STRING';
-<<EOF>>                             return 'EOF';
+(left|right|up|down|end|print)      return "DIRECTION";
+(\<|\>|\>\=|\<\=|\=)                return "COMPARE";
+\,                                  return ",";
+\/                                  return "/";
+\*                                  return "*";
+\-                                  return "-";
+\+                                  return "+";
+\%                                  return "%";
+\(                                  return "(";
+\)                                  return ")";
+[a-zA-Z\_]{1}[a-zA-Z0-9\_]*         return "VAR";
+\-?[0-9]+                           return "NUMBER";
+\"[^"]+\"                           yytext = yytext.slice(1,-1); return "STRING";
+<<EOF>>                             return "EOF";
 
 /lex
 
 
 /* operator associations and precedence */
 
-%left '+' '-'
-%left '*' '/'
-%left '%'
+%left "+" "-"
+%left "*" "/"
+%left "%"
 
 %start gridcell
 
@@ -33,41 +33,66 @@
 
 gridcell
     : declarations functions EOF
-        {$$ = $1}
+        {return { 
+            "declarations":$1,
+            "functions":$2
+            }
+        }
     | EOF
-        {'empty cell'}
+        {return "empty cell"}
     ;
 
+
 declarations
-    : VAR ',' declarations
-        {$$ = $1,$3}
+    : declarations "," VAR
+        {$$ = $1.concat([$3]);}
     | VAR
-        {$$ = $1}
+        {$$ = [$1]}
     ;
 
 functions
-    : function functions
-        {$$ = $1;$2;}
+    : functions function 
+        {$$ = $1.concat($2);}
     | function 
-        {$$ = $1}
+        {$$ = [$1];}
     ;
 
 function
-    : condition DIRECTION '(' params ')'
-        {$$ = $1;$3;}
-    | DIRECTION '(' params ')'
-        {$$ = $1;$3;}
-    | condition DIRECTION '(' ')'
-        {$$ = $1;}
-    | DIRECTION '(' ')'
-        {$$ = $1;}
+    : condition DIRECTION "(" params ")"
+        {$$ = {
+            "type": "direction",
+            "condition" : $1,
+            "direction" : $2,
+            "params": $4
+            }
+        }
+    | DIRECTION "(" params ")"
+        {$$ = {
+            "type": "direction",
+            "direction" : $1,
+            "params": $3
+            }
+        }
+    | condition DIRECTION "(" ")"
+        {$$ = {
+            "type": "direction",
+            "condition" : $1,
+            "direction": $2
+            }
+        }
+    | DIRECTION "(" ")"
+        {$$ = {
+            "type": "direction",
+            "direction" : $1
+            }
+        }
     ;
 
 params
-    : param ',' params
-        {$$ = $1,$3}
+    : params "," param
+        {$$ = $1.concat($3);}
     | param
-        {$$ = $1}
+        {$$ = [$1]}
     ;
 
 param
@@ -79,26 +104,61 @@ param
 
 condition
     : me COMPARE me
-        {$$ = $1;$3;}
+        {$$ = {
+            "type": "comparison",
+            "operator": $2,
+            "values": [$1,$3]
+            };
+        }
     ;
 
+/* Math expressions */
 me
-    : me '+' me
-        {$$ = $1+$3;}
-    | me '-' me
-        {$$ = $1-$3;}
-    | me '*' me
-        {$$ = $1*$3;}
-    | me '/' me
-        {$$ = $1/$3;}
-    | me '%' me
-        {$$ = $1%$3;}
-    | '-' me %prec UMINUS
-        {$$ = -$2;}
-    | '(' me ')'
-        {$$ = $2;}
+    : me "+" me
+        {$$ = {
+            "type": "math",
+            "operator":"+",
+            "params":[$1,$3]
+            }
+        }
+    | me "-" me
+        {$$ = {
+            "type": "math",
+            "operator":"-",
+            "params":[$1,$3]
+            }
+        }
+    | me "*" me
+        {$$ = {
+            "type": "math",
+            "operator":"*",
+            "params":[$1,$3]
+            }
+        }
+    | me "/" me
+        {$$ = {
+            "type": "math",
+            "operator":"/",
+            "params":[$1,$3]
+            }
+        }
+    | me "%" me
+        {$$ = {
+            "type": "math",
+            "operator":"%",
+            "params":[$1,$3]
+            }
+        }
+    | "-" me %prec UMINUS
+        {$$ = -$2}
+    | "(" me ")"
+        {$$ = $2}
     | NUMBER
-        {$$ = Number(yytext);}
+        {$$ = Number(yytext)}
     | VAR
-        {$$ = Number(yytext);}
+        {$$ = {
+            "type": "var",
+            "identifier" : $1
+            }
+        }
     ;
