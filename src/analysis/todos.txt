@@ -1,0 +1,6 @@
+Analyzer needs to test:
+- has each variable been declared
+
+
+- type checking? need to implement type system first
+- theoretically also possible to check if they are passed correctly from other cells
