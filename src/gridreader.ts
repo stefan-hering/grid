@@ -1,7 +1,7 @@
 import {Grid} from "grid";
 
-export function readGrid(grid : String) : String[][] {
-    let tillFirstAt : String = grid.split("@")[0]
+export function readGrid(grid : string) : string[][] {
+    let tillFirstAt : string = grid.split("@")[0]
     // The height is simply the number of linebreaks before the first @
     let height : number = tillFirstAt.match(/\n/g).length;
     // The width is the amount of characters between the @ and the previous linebreak
@@ -9,8 +9,8 @@ export function readGrid(grid : String) : String[][] {
     // The number of cells in one row of the grid
     let horizontalCells : number = Math.floor((grid.indexOf("\n") + 1) / (width + 1));
 
-    let parsedGrid : String[][] = [];
-    let lines : String[] = grid.split("\n");
+    let parsedGrid : string[][] = [];
+    let lines : string[] = grid.split("\n");
     let row = 0;
     parsedGrid[0] = [];
 

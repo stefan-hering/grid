@@ -14,8 +14,8 @@
 \(                                  return "(";
 \)                                  return ")";
 [a-zA-Z\_]{1}[a-zA-Z0-9\_]*         return "VAR";
-\-?[0-9]+                           return "NUMBER";
-\"[^"]+\"                           yytext = yytext.slice(1,-1); return "STRING";
+\-?[0-9]+(\.[0-9]+)?                return "NUMBER";
+\"[^"]*\"                           yytext = yytext.slice(1,-1); return "STRING";
 <<EOF>>                             return "EOF";
 
 /lex

@@ -6,7 +6,7 @@ const EOF = "EOF";
 
 class Rule {
     constructor(public readonly regex: RegExp, 
-        public readonly matchFunction:(result :String)  => Token){
+        public readonly matchFunction:(result :string)  => Token){
     }
 }
 
@@ -17,7 +17,7 @@ let rules : Rule[] = [
     new Rule(/(\(|\))/,(result) => {
         return new Token(result,TokenType.BRACKET);
     }),
-    new Rule(/(<|>|>=|<=|=)/,(result) => {
+    new Rule(/(\<|\>|\>\=|\<\=|\=)/,(result) => {
         return new Token(result,TokenType.COMPARE_OPERATOR);
     }),
     new Rule(/\,/,(result) => {
@@ -29,10 +29,10 @@ let rules : Rule[] = [
     new Rule(/[a-zA-Z\_]{1}[a-zA-Z0-9\_\-]*/,(result) => {
         return new Token(result,TokenType.IDENTIFIER);
     }),
-    new Rule(/\-?[0-9]+/,(result) => {
+    new Rule(/\-?[0-9]+(\.[0-9]+)?/,(result) => {
         return new Token(result,TokenType.NUMBER);
     }),
-    new Rule(/\"[^"^\n]*\"/,(result) => {
+    new Rule(/\"[^"]*\"/,(result) => {
         return new Token(result,TokenType.STRING);
     }),
     new Rule(/\s+/,(result) => {
@@ -41,11 +41,11 @@ let rules : Rule[] = [
 ];
 
 
-function lexGridCell(input : String) : String[]{
-    let tokens : String[] = [];
+function lexGridCell(input : string) : string[]{
+    let tokens : string[] = [];
     let l:GridLexer = new GridLexer;
     l.setInput(input);
-    let token : String = l.lex();
+    let token : string = l.lex();
     while(token !== EOF){
         tokens.push(token);
         token = l.lex();
@@ -65,10 +65,10 @@ class GridLexer {
             this.lexer.addRule(rule.regex, rule.matchFunction);
         }
     }
-    public setInput(input : String): void {
+    public setInput(input : string): void {
         this.lexer.setInput(input);
     }
-    public lex(): String {
+    public lex(): string {
         let token = this.lexer.lex();
         if(token == null){
             return EOF;

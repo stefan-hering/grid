@@ -13,7 +13,7 @@ export enum TokenType{
 }
 
 export class Token {
-    constructor(public readonly token: String, 
+    constructor(public readonly token: string, 
                 public readonly type:TokenType){
     }
 }

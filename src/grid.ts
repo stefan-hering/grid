@@ -1,9 +1,22 @@
 
-export class Grid {
-    private grid : Block[][];
+class Grid {
+    private grid : Cell[][];
 }
 
-
-export class Block {
-    private instructions : String[];
+enum CellType {
+    EMPTY, REGULAR
 }
+
+interface Cell {
+    readonly type: CellType;
+}
+
+class EmptyCell implements Cell {
+    readonly type = CellType.EMPTY;
+}
+
+class RegularCell implements Cell {
+    readonly type = CellType.REGULAR;
+}
+
+export {Grid,CellType, Cell,EmptyCell,RegularCell};

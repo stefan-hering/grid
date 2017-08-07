@@ -1,11 +1,11 @@
-import {getParser} from "../src/parser/parser";
+import {Parser} from "../src/parser/parser";
 import { suite, test, slow, timeout } from "mocha-typescript";
 import { expect } from 'chai';
 
 
 suite("Parse", () => {
     test("Should parse stuff", () => {
-        let parser = getParser();
+        let parser = new Parser;
         expect(parser.parse("")).to.equal("empty cell");
         expect(parser.parse("  \n\t\n   \n\t")).to.equal("empty cell");
 
