@@ -1,4 +1,3 @@
-// mygenerator.js
 let fs = require("fs");
 let jison = require("jison");
 

@@ -3,3 +3,4 @@
 --require ts-node/register 
 test/testlexer.ts
 test/testparser.ts
+test/testgridreader.ts
