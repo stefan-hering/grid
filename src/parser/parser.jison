@@ -13,6 +13,7 @@
 \%                                  return "%";
 \(                                  return "(";
 \)                                  return ")";
+\:                                  return ":";
 [a-zA-Z\_]{1}[a-zA-Z0-9\_]*         return "VAR";
 \-?[0-9]+(\.[0-9]+)?                return "NUMBER";
 \"[^"]*\"                           yytext = yytext.slice(1,-1); return "STRING";
@@ -44,10 +45,18 @@ gridcell
 
 
 declarations
-    : declarations "," VAR
+    : declarations "," declaration
         {$$ = $1.concat([$3]);}
-    | VAR
+    | declaration
         {$$ = [$1]}
+    ;
+
+declaration
+    : VAR ":" VAR
+        {$$ = {
+            "varname": $1,
+            "type": $3
+        }}
     ;
 
 functions

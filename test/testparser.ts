@@ -6,11 +6,15 @@ import { expect } from 'chai';
 suite("Parse", () => {
     test("Should parse stuff", () => {
         let parser = new Parser;
-        expect(parser.parse("")).to.equal("empty cell");
-        expect(parser.parse("  \n\t\n   \n\t")).to.equal("empty cell");
 
-        expect(parser.parse("i down(i)")).to.deep.equal({ 
-            declarations: ['i'],
+        expect(parser.jisonResult("")).to.equal("empty cell");
+        expect(parser.jisonResult("  \n\t\n   \n\t")).to.equal("empty cell");
+
+        expect(parser.jisonResult("i:int down(i)")).to.deep.equal({ 
+            declarations: [{
+                "type": "int",
+                "varname" : "i"
+            }],
             functions: [{
                 type: 'direction',
                 direction: 'down', 
@@ -18,8 +22,14 @@ suite("Parse", () => {
             }]
         });
         
-        expect(parser.parse("i,j\ni = 3 left(i-1,j)\n i % 5 = 0 right(i-1,j)\nup(i,j)")).to.deep.equal({
-            declarations: ['i','j'],
+        expect(parser.jisonResult("i:int,j:int\ni = 3 left(i-1,j)\n i % 5 = 0 right(i-1,j)\nup(i,j)")).to.deep.equal({
+            declarations: [{
+                "type": "int",
+                "varname" : "i"
+            },{
+                "type": "int",
+                "varname" : "j"
+            }],
             functions: [
             {
                 type: 'direction',

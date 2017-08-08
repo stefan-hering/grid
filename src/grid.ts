@@ -16,7 +16,10 @@ class EmptyCell implements Cell {
 }
 
 class RegularCell implements Cell {
-    readonly type = CellType.REGULAR;
+    public readonly type = CellType.REGULAR;
+    constructor(public readonly declarations : string[],
+                public readonly directions : string[]){
+    }
 }
 
 export {Grid,CellType, Cell,EmptyCell,RegularCell};

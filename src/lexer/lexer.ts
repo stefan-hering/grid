@@ -35,6 +35,12 @@ let rules : Rule[] = [
     new Rule(/\"[^"]*\"/,(result) => {
         return new Token(result,TokenType.STRING);
     }),
+    new Rule(/:/,(result) => {
+        return new Token(result,TokenType.TYPE_DECLARE);
+    }),
+    new Rule(/\"[^"]*\"/,(result) => {
+        return new Token(result,TokenType.STRING);
+    }),
     new Rule(/\s+/,(result) => {
         return new Token("",TokenType.WHITESPACE);
     })

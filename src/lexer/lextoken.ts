@@ -9,6 +9,7 @@ export enum TokenType{
     SEPARATOR,
     STRING,
     BRACKET,
+    TYPE_DECLARE,
     EOF
 }
 

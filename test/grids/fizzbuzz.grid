@@ -1,18 +1,18 @@
-                 |i,j              |                 
+                 |i:int,j:int      |                 
                  |print(i)         |                 
                  |down(i+1,j)      |                 
                  |                 |                 
                  |                 |                 
                  |                 |                 
 -----------------@-----------------@-----------------
-i,j              |i,j              |i,j             
+i:int,j:int      |i:int,j:int      |i:int,j:int      
 print("Fizz")    |i=j end()        |print("FizzBuzz")
 right(i+1,j)     |i%15=0 right(i,j)|print("Buzz")    
                  |i%5=0 down(i,j)  |left(i+1,j)      
                  |i%3=0 left(i,j)  |                 
                  |up(i,j)          |                 
 -----------------@-----------------@-----------------
-                 |i,j              |                 
+                 |i:int,j:int      |                 
                  |print("Buzz")    |                 
                  |up(i+1,j)        |                 
                  |                 |                 
