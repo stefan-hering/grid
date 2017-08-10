@@ -9,6 +9,7 @@ export function readGrid(grid : string) : string[][] {
     // The number of cells in one row of the grid
     let horizontalCells : number = Math.floor((grid.indexOf("\n") + 1) / (width + 1));
 
+
     let parsedGrid : string[][] = [];
     let lines : string[] = grid.split("\n");
     let row = 0;
