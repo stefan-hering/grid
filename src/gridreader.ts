@@ -17,12 +17,15 @@ export function readGrid(grid : string) : string[][] {
 
     for(let i = 0; i < lines.length; i++){
         if(i % (height + 1) == height){
-            // Each (height + 1)th row is a placeholder, so we just increase the row counter
+            // Each (height + 1)th row is a placeholder, so we need to increase the row counter
             row++;
             parsedGrid[row] = [];
-        } else {
+        } else {    
             for(let j = 0; j < horizontalCells; j++){
-                parsedGrid[row][j] = lines[i].slice(j * (width + 1),
+                if(typeof parsedGrid[row][j] == "undefined"){
+                    parsedGrid[row][j] = "";
+                }
+                parsedGrid[row][j] += lines[i].slice(j * (width + 1),
                     j * (width + 1) + width) + "\n";
             }
         }

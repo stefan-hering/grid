@@ -116,7 +116,7 @@ condition
         {$$ = {
             "type": "comparison",
             "operator": $2,
-            "values": [$1,$3]
+            "params": [$1,$3]
             };
         }
     ;

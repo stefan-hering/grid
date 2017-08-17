@@ -4,3 +4,4 @@
 test/testlexer.ts
 test/testparser.ts
 test/testgridreader.ts
+test/testanalyzer.ts

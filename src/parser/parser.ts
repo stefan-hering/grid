@@ -1,4 +1,4 @@
-import {Cell,EmptyCell,RegularCell} from "../grid";
+import * as g from "../grid";
 let fs = require("fs");
 let jison = require("jison");
 
@@ -6,14 +6,161 @@ let grammar = fs.readFileSync("src/parser/parser.jison", "utf8");
 
 class Parser {
     private jisonParser = new jison.Parser(grammar);
+    private declarations : {[key:string]:g.Type};
+    private directions : g.Direction[];
 
-    public parse(text : string): Cell{
+
+    private convertMathOperator(operator : string) : g.MathOperator {
+        switch(operator){
+            case "+":
+                return g.MathOperator.PLUS;
+            case "-":
+                return g.MathOperator.MINUS;
+            case "*":
+                return g.MathOperator.TIMES;
+            case "/":
+                return g.MathOperator.DIVIDED_BY;
+            case "%":
+                return g.MathOperator.MODULO;
+        }
+        throw new ParserError("Unexpected operator",operator);
+    }
+
+    private convertMathExpression(mathExpression : any) : g.MathExpression{
+        if(mathExpression.type !== "math"){
+            throw new ParserError("Expected math, got " + mathExpression.type, mathExpression);
+        }
+        let left : g.Param = this.convertParam(mathExpression.params[0]);
+        let right : g.Param = this.convertParam(mathExpression.params[1]);
+
+        let type = g.getTypeOfParam(left);
+        if(type != g.getTypeOfParam(right)){
+            throw new ParserError("Type mismatch", mathExpression);
+        }
+
+        return new g.MathExpression(left,
+            this.convertMathOperator(mathExpression.operator),
+            right,
+            g.Type.NUMBER);
+    }
+
+    private convertCondition(condition : any) : g.Condition {
+        if(condition.type !== "comparison"){
+            throw new ParserError("Expected comparison, got " + condition.type, condition);
+        }
+        let left : g.Param = this.convertParam(condition.params[0]);
+        let right : g.Param = this.convertParam(condition.params[1]);
+
+        if(g.getTypeOfParam(left) != g.getTypeOfParam(right)){
+            throw new ParserError("Type mismatch", condition);
+        }
+
+        return new g.Condition(left,condition.operator,right);
+    }
+
+    private convertParams(params : any) : g.Param[]{
+        let parsedParams : g.Param[] = [];
+        if(typeof params === "undefined"){
+            return parsedParams;
+        }
+        for(let param of params){
+            parsedParams.push(this.convertParam(param));
+        }
+        return parsedParams;
+    }
+
+    private convertParam(param : any) : g.Param {
+        if(typeof param === "number" || typeof param === "string"){
+            return param;
+        }
+        if(param.type === "var"){
+            if(param.identifier in this.declarations){
+                return new g.Var(param.identifier,this.declarations[param.identifier]);
+            } else {
+                throw new ParserError("Unexpected identifier " + param.identifier);
+            }
+        }
+        if(param.type === "math"){
+            return this.convertMathExpression(param);
+        }
+        throw new ParserError("Could not convert param",param);
+    }
+
+    private convertDirection(direction : any) : g.Direction {
+        let directionFunction : g.GridFunction;
+        switch(direction.direction){
+            case "up":
+                directionFunction = g.Angle.UP;
+                break;
+            case "down":
+                directionFunction = g.Angle.DOWN;
+                break;
+            case "left":
+                directionFunction = g.Angle.LEFT;
+                break;
+            case "right":
+                directionFunction = g.Angle.RIGHT;
+                break;
+            default:
+                directionFunction = direction.direction;
+        }
+
+        if(direction.condition != undefined){
+            return new g.Direction(directionFunction,
+                this.convertParams(direction.params),
+                this.convertCondition(direction.condition)
+            );
+        } else {
+            return new g.Direction(directionFunction,
+                this.convertParams(direction.params)
+            );
+        }
+    }
+
+    private convertType(type : string): g.Type {
+        switch(type){
+            case "number":
+            return g.Type.NUMBER;
+            case "string":
+            return g.Type.STRING;
+        }
+        throw new ParserError("Unknown type", type);
+    }
+
+    /**
+     * Parses one cell into a more usable [[Cell]] object.
+     * Throws erros on duplicate declarations and undeclared variables.
+     * @param text 
+     */
+    public parse(text : string): g.Cell{
         let cell :any = this.jisonParser.parse(text);
         if(cell === "empty cell"){
-            return new EmptyCell;
+            return new g.EmptyCell;
         }
-        let regCell : RegularCell;
-        return;
+        this.declarations = {};
+        this.directions = [];
+        let parsedDeclarations : g.Declaration[] = [];
+
+        for(let declaration of cell.declarations){
+            if(declaration.varname in this.declarations){
+                throw new ParserError(declaration.varname + " is already defined");
+            }
+            this.declarations[declaration.varname] = this.convertType(declaration.type);
+            let type : g.Type;
+
+            parsedDeclarations.push(
+                new g.Declaration(declaration.varname, 
+                    this.convertType(declaration.type))
+            );
+        }
+
+        for(let direction of cell.functions){
+            this.directions.push(
+                this.convertDirection(direction)
+            );
+        }
+
+        return new g.RegularCell(parsedDeclarations, this.directions);
     }
 
     public jisonResult(text: string): any {
@@ -21,4 +168,31 @@ class Parser {
     }
 }
 
-export {Parser};
+class ParserError implements Error{
+    public readonly name = "ParserError";
+    constructor(public readonly message : string,public readonly source? : any){
+    }
+}
+
+function parseWholeGrid(texts : string[][]) : g.Grid{
+    let cells : g.Cell[][] = [];
+    let parser : Parser = new Parser();
+    for(let row of texts){
+        let parsedCells : g.Cell[] = [];
+        for(let cell of row){
+            parsedCells.push(parser.parse(cell));
+        }
+        cells.push(parsedCells);
+    }
+    return new g.Grid(cells);
+}
+
+function parseGridCell(text : string) : g.Cell {
+    return new Parser().parse(text);
+}
+
+function parseGridCellToJison(text : string) {
+    return new Parser().jisonResult(text);
+}
+
+export {parseGridCell,parseGridCellToJison,parseWholeGrid,ParserError};
