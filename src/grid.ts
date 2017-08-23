@@ -28,7 +28,8 @@ type GridFunction = Angle | string;
 type Cell = EmptyCell | RegularCell;
 
 class EmptyCell {
-    constructor(public readonly type = CellType.EMPTY){};
+    public readonly type = CellType.EMPTY;
+    constructor(){};
 }
 
 class RegularCell {
@@ -54,12 +55,14 @@ class Declaration {
         public readonly type : Type){}
 }
 
-type Param = MathExpression | Var | number | string;
+type Value = number | string;
+
+type Param = MathExpression | Var | Value;
 
 class Condition {
-    constructor(public readonly leftParam : Param,
+    constructor(public readonly left : Param,
         public readonly operator : string,
-        public readonly rightParam : Param){}
+        public readonly right : Param){}
 }
 
 class Direction {
@@ -80,12 +83,12 @@ class Position {
  * @param d 
  * @param p 
  */
-let traverse = (g:Grid,d:Direction,p:Position): [RegularCell,Position] => {
+let traverse = (g:Grid,d:Angle,p:Position): [RegularCell,Position] => {
     let cell : Cell = new EmptyCell;
     let position : Position = p;
     while(cell instanceof EmptyCell){
         // Advance position
-        switch(d.direction){
+        switch(d){
             case Angle.UP:
                 if(position.row === 0){
                     position = new Position(g.grid.length - 1, position.cell);
@@ -121,6 +124,10 @@ function isVar(variable : Param) : variable is Var{
     return (<Var>variable).type !== undefined;
 }
 
+function isAngle(direction : GridFunction) : direction is Angle{
+    return ! (typeof direction === "string");
+}
+
 let getTypeOfParam = (param : Param): Type =>{
     if(isMathExpression(param)){
         return param.returnType;
@@ -136,5 +143,5 @@ let getTypeOfParam = (param : Param): Type =>{
     }
 }
 
-export {Angle,CellType,Cell,Condition,Declaration,Direction,EmptyCell,Grid,GridFunction,MathExpression,MathOperator,Param,Position,RegularCell,Type,Var};
-export {traverse,getTypeOfParam};
+export {Angle,CellType,Cell,Condition,Declaration,Direction,EmptyCell,Grid,GridFunction,MathExpression,MathOperator,Param,Position,RegularCell,Type,Value,Var};
+export {isMathExpression,isAngle,isVar,traverse,getTypeOfParam};

@@ -22,7 +22,7 @@ class Analyzer {
     private checkCell(cell: g.RegularCell, position: g.Position){
         for(let i = 0; i < cell.directions.length; i++){
             let direction : g.Direction = cell.directions[i];
-            if(typeof direction.direction === "string"){
+            if(! g.isAngle(direction.direction)){
                 continue;
             }
             // Directions without condition in any place but last means unreachable code
@@ -35,10 +35,10 @@ class Analyzer {
     }
 
     private matchParams(direction : g.Direction, position : g.Position){
-        if(typeof direction.direction === "string"){
+        if(! g.isAngle(direction.direction)){
             return;
         }
-        let target = g.traverse(this.grid,direction,position);
+        let target = g.traverse(this.grid,direction.direction,position);
 
         // match the target grid input params with these params
         if(direction.params.length != target[0].declarations.length){
