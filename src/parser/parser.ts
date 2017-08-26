@@ -1,11 +1,12 @@
 import * as g from "../grid";
 let fs = require("fs");
-let jison = require("jison");
+import * as jp from "./jison-parser";
+
 
 let grammar = fs.readFileSync("src/parser/parser.jison", "utf8");
 
 class Parser {
-    private jisonParser = new jison.Parser(grammar);
+    private jisonParser = new jp.Parser;
     private declarations : {[key:string]:g.Type};
     private directions : g.Direction[];
 

@@ -8,6 +8,25 @@
     "test": "nyc mocha",
     "prepare": "tsc"
   },
+  "nyc" : {
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stefan-hering/grid.git"
@@ -19,18 +38,21 @@
   },
   "homepage": "https://github.com/stefan-hering/grid#readme",
   "dependencies": {
-    "@types/chai": "^4.0.1",
-    "@types/mocha": "^2.2.41",
-    "mocha": "^3.4.2"
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.42",
+    "gulp-jison": "^1.2.0",
+    "mocha": "^3.5.0"
   },
   "devDependencies": {
-    "@types/node": "^8.0.7",
-    "chai": "^4.0.2",
+    "@types/node": "^8.0.25",
+    "chai": "^4.1.1",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
     "jison": "^0.4.17",
     "lex": "^1.7.9",
     "mocha-typescript": "^1.1.7",
-    "nyc": "^11.0.3",
-    "ts-node": "^3.2.0",
-    "typescript": "^2.4.1"
+    "nyc": "^11.1.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.1"
   }
 }
