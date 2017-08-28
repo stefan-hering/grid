@@ -1,9 +1,5 @@
 import * as g from "../grid";
-let fs = require("fs");
 import * as jp from "./jison-parser";
-
-
-let grammar = fs.readFileSync("src/parser/parser.jison", "utf8");
 
 class Parser {
     private jisonParser = new jp.Parser;
@@ -196,4 +192,4 @@ function parseGridCellToJison(text : string) {
     return new Parser().jisonResult(text);
 }
 
-export {parseGridCell,parseGridCellToJison,parseWholeGrid,ParserError};
+export {Parser,parseGridCell,parseGridCellToJison,parseWholeGrid,ParserError};

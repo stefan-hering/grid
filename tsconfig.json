@@ -2,16 +2,17 @@
     "compileOnSave": true,
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2016",
+        "target": "es6",
         "moduleResolution": "node",
         "noImplicitAny": true,
         "removeComments": true,
         "experimentalDecorators": true,
         "allowJs": true,
+        "jsx": "react",
         "typeRoots": [
             "src"
         ],
-        "lib" : [ "es6" ],
+        "lib" : [ "es6","dom" ],
         "baseUrl": "src",
         "sourceMap": true,
         "types": [

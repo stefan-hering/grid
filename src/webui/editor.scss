@@ -1,0 +1,25 @@
+
+// Margin top and bottom for element spacing
+$main-margin : .5rem 0;
+
+$main-color : #A3C0FF;
+
+
+.editor {
+    min-height : 200px;
+    min-width : 200px;
+    margin: $main-margin;
+}
+
+.grid-menu {
+    background-color:  $main-color;
+}
+
+.grid-settings {
+    margin : $main-margin;
+}
+
+input[type=number] {
+    max-width: 60px;
+    text-align: center;
+}
