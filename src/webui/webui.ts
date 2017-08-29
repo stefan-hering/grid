@@ -6,12 +6,12 @@ require("./grid-editor.html");
 require("./editor.scss");
 
 
-export class GridEditorSettings {
+export interface GridEditorSettings {
     // React typing expect input values to be strings
-    constructor(public width : string, public height : string){
-    }
+    readonly width : string;
+    readonly height : string;
 }
 
-let settings = new GridEditorSettings("3","3");
+let settings = {width:"3",height: "3"};
 
 initUI(settings);
