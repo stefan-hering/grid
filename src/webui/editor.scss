@@ -19,6 +19,10 @@ $main-color : #A3C0FF;
     margin : $main-margin;
 }
 
+.grid-button {
+    margin : 0 $main-margin;
+}
+
 input[type=number] {
     max-width: 60px;
     text-align: center;
