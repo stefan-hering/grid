@@ -19,8 +19,10 @@ Example cell:
 
 ```
 i:number
-i = 1 left(j)
+i = 1 left(i)
 right(i+1)
 ```
+
+This cell has a single input, a number named `i`. If `i` is 1, it's value will be sent to the left. Otherwise, the value of `i+1` will be sent right.
 
 Note that to keep grid cells pure, no variables may be assigned. That means contrary to unpure programming languages, `i = 1` is a comparison instead.
