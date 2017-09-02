@@ -39,6 +39,12 @@ gridcell
             "functions":$2
             }
         }
+    | functions EOF
+        {return { 
+            "declarations":[],
+            "functions":$1
+            }
+        }
     | EOF
         {return "empty cell"}
     ;

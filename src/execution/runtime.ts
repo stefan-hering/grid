@@ -9,6 +9,9 @@ class CellExecutor {
     // "Heap", just a map of what's in the context
     private heap : Heap = {};
 
+    constructor(private readonly io : IO){
+    }
+
     private handleParam = (param : any): any => {
         if(g.isMathExpression(param)){
             return this.evaluateMathExpression(param);
@@ -80,7 +83,7 @@ class CellExecutor {
                 } else {
                     switch(direction.direction){
                         case "print":
-                            console.log(this.evaluateParams(direction.params));
+                            this.io.out(this.evaluateParams(direction.params)[0]);
                             break;
                         // Dumb way of just ending execution
                         case "end":
@@ -100,7 +103,12 @@ class EndError extends RuntimeError{
     public readonly type = "exit";
 }
 
-let executeGrid = (grid : g.Grid, start : g.Position, params? : g.Value[]): void => {
+interface IO {
+    out : (o:g.Value) => void;
+    in : () => string;
+}
+
+let executeGrid = (grid : g.Grid, start : g.Position, io : IO, params? : g.Value[]): void => {
     let cell : g.Cell = grid.cellAt(start);
     if(cell.type !== g.CellType.REGULAR){
         throw new RuntimeError("Trying to start at empty cell");
@@ -110,7 +118,7 @@ let executeGrid = (grid : g.Grid, start : g.Position, params? : g.Value[]): void
 
     while(true){
         try {
-            let executor = new CellExecutor;
+            let executor = new CellExecutor(io);
             let executionResult = executor.executeCell(cell,currentParams);
             currentParams = executionResult[1];
             let traverseResult =  g.traverse(grid, executionResult[0], current);
@@ -122,4 +130,4 @@ let executeGrid = (grid : g.Grid, start : g.Position, params? : g.Value[]): void
     }
 }
 
-export {executeGrid};
+export {executeGrid, IO, RuntimeError};

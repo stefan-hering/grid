@@ -30,7 +30,8 @@ module.exports = {
         }]
     },
     node: {
-        fs: "empty"
+        fs: "empty",
+        readline: "empty"
     },
     watch : true,
     plugins: [

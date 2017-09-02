@@ -1,6 +1,6 @@
 
 // Margin top and bottom for element spacing
-$main-margin : .5rem 0;
+$main-margin : .5rem .025rem;
 
 $main-color : #A3C0FF;
 
@@ -17,10 +17,16 @@ $main-color : #A3C0FF;
 
 .grid-settings {
     margin : $main-margin;
+    &--run {
+        text-align: right;
+    }
+    input {
+        margin : 0 .25rem;
+    }
 }
 
 .grid-button {
-    margin : 0 $main-margin;
+    margin : 0 .5rem;
 }
 
 input[type=number] {
