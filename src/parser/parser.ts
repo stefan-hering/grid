@@ -55,6 +55,16 @@ class Parser {
         return new g.Condition(left,condition.operator,right);
     }
 
+    private convertConcatenation(concatenation : any) : g.Concatenation{
+        if(concatenation.type !== "concat"){
+            throw new ParserError("Expected concat, got " + concatenation.type, concatenation);
+        }
+        let left : g.Param = this.convertParam(concatenation.params[0]);
+        let right : g.Param = this.convertParam(concatenation.params[1]);
+
+        return new g.Concatenation(left,right);
+    }
+
     private convertParams(params : any) : g.Param[]{
         let parsedParams : g.Param[] = [];
         if(typeof params === "undefined"){
@@ -79,6 +89,9 @@ class Parser {
         }
         if(param.type === "math"){
             return this.convertMathExpression(param);
+        }
+        if(param.type === "concat"){
+            return this.convertConcatenation(param);
         }
         throw new ParserError("Could not convert param",param);
     }
@@ -117,9 +130,11 @@ class Parser {
     private convertType(type : string): g.Type {
         switch(type){
             case "number":
-            return g.Type.NUMBER;
+                return g.Type.NUMBER;
             case "string":
-            return g.Type.STRING;
+                return g.Type.STRING;
+            case "Cube":
+                return g.Type.CUBE;
         }
         throw new ParserError("Unknown type", type);
     }

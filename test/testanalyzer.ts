@@ -19,6 +19,13 @@ suite("Analyzer", () => {
         }
         expect(notThrowing).to.not.throw();
     });
+    test("Should analyze the 99 bottles grid", () => {
+        getAnalyer("test/grids/99bottles.grid").analyzeGrid();
+        let notThrowing = function(){
+            getAnalyer("test/grids/99bottles.grid").analyzeGrid();
+        }
+        expect(notThrowing).to.not.throw();
+    });
     test("Should find errors", () => {
         let throwing = function(){
             getAnalyer("test/grids/analyzer-error.grid").analyzeGrid();

@@ -12,7 +12,7 @@ enum CellType {
 }
 
 enum Type {
-    NUMBER, STRING
+    NUMBER, STRING, CUBE
 }
 
 enum MathOperator {
@@ -45,6 +45,12 @@ class MathExpression {
         public readonly returnType : Type){}
 }
 
+class Concatenation {
+    public readonly returnType = Type.STRING;
+    constructor(public readonly left : Param,
+    public readonly right : Param){}
+}
+
 class Var {
     constructor(public readonly identifier : string,
         public readonly type : Type){}
@@ -57,7 +63,7 @@ class Declaration {
 
 type Value = number | string;
 
-type Param = MathExpression | Var | Value;
+type Param = MathExpression | Concatenation | Var | Value;
 
 class Condition {
     constructor(public readonly left : Param,
@@ -143,5 +149,5 @@ let getTypeOfParam = (param : Param): Type =>{
     }
 }
 
-export {Angle,CellType,Cell,Condition,Declaration,Direction,EmptyCell,Grid,GridFunction,MathExpression,MathOperator,Param,Position,RegularCell,Type,Value,Var};
+export {Angle,CellType,Cell,Condition,Concatenation,Declaration,Direction,EmptyCell,Grid,GridFunction,MathExpression,MathOperator,Param,Position,RegularCell,Type,Value,Var};
 export {isMathExpression,isAngle,isVar,traverse,getTypeOfParam};

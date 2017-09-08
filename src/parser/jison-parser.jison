@@ -4,7 +4,12 @@
 
 \s+                                 /* Whitespace */;
 (left|right|up|down|end|print)      return "DIRECTION";
-(\<|\>|\>\=|\<\=|\=)                return "COMPARE";
+\<[a-zA-Z\_]{1}[a-zA-Z0-9\_]*\>     return "GENERIC";
+[a-zA-Z\_]{1}[a-zA-Z0-9\_]*         return "VAR";
+\-\>                                return "POP";
+\<\-                                return "PUSH";
+(\<|\>|\>\=|\<\=|\=|\!\=)           return "COMPARE";
+\!                                  return "!";
 \,                                  return ",";
 \/                                  return "/";
 \*                                  return "*";
@@ -14,7 +19,7 @@
 \(                                  return "(";
 \)                                  return ")";
 \:                                  return ":";
-[a-zA-Z\_]{1}[a-zA-Z0-9\_]*         return "VAR";
+\.                                  return ".";
 \-?[0-9]+(\.[0-9]+)?                return "NUMBER";
 \"[^"]*\"                           yytext = yytext.slice(1,-1); return "STRING";
 <<EOF>>                             return "EOF";
@@ -24,6 +29,7 @@
 
 /* operator associations and precedence */
 
+%left "."
 %left "+" "-"
 %left "*" "/"
 %left "%"
@@ -58,11 +64,24 @@ declarations
     ;
 
 declaration
-    : VAR ":" VAR
+    : VAR ":" VAR GENERIC POP VAR
+        {$$ = {
+            "varname": $1,
+            "type": $3,
+            "generic": $4,
+            "pop" : $6
+        }}
+    |VAR ":" VAR GENERIC
+        {$$ = {
+            "varname": $1,
+            "type": $3,
+            "generic": $4
+        }}
+    | VAR ":" VAR
         {$$ = {
             "varname": $1,
             "type": $3
-        }}
+        }} 
     ;
 
 functions
@@ -99,7 +118,7 @@ function
         {$$ = {
             "type": "direction",
             "direction" : $1
-            }
+            };
         }
     ;
 
@@ -111,9 +130,13 @@ params
     ;
 
 param
-    : me
-        {$$ = $1}
-    | STRING
+    : VAR PUSH param
+        {$$ = {
+            "type" : "var",
+            "identifier" : $1,
+            "push" : $3
+        };}
+    | me
         {$$ = $1}
     ;
 
@@ -126,6 +149,7 @@ condition
             };
         }
     ;
+
 
 /* Math expressions */
 me
@@ -164,12 +188,20 @@ me
             "params":[$1,$3]
             }
         }
+    | me "." me
+        {$$ = {
+            "type": "concat",
+            "params":[$1,$3]
+            }
+        }
     | "-" me %prec UMINUS
         {$$ = -$2}
     | "(" me ")"
         {$$ = $2}
     | NUMBER
         {$$ = Number(yytext)}
+    | STRING
+        {$$ = $1}
     | VAR
         {$$ = {
             "type": "var",
