@@ -6,3 +6,4 @@ test/testparser.ts
 test/testgridreader.ts
 test/testanalyzer.ts
 test/testexecution.ts
+test/testcube.ts

@@ -1,4 +1,5 @@
 import * as g from "../grid";
+import {Cube} from "../stdlib/cube";
 
 interface Heap {[key:string]:any};
 
@@ -13,13 +14,24 @@ class CellExecutor {
     }
 
     private handleParam = (param : any): any => {
-        if(g.isMathExpression(param)){
+        if(g.isConcatenation(param)){
+            return this.evaluateConcatenation(param);
+        } else if(g.isMathExpression(param)){
             return this.evaluateMathExpression(param);
         } else if(g.isVar(param)){
+            if(param.pushValue != null){
+                this.heap[param.identifier].insert(this.handleParam(param.pushValue));
+            }
             return this.heap[param.identifier];
         } else {
             return param;
         }
+    }
+
+    private evaluateConcatenation = (concatenation : g.Concatenation): g.Value => {
+        let left = this.handleParam(concatenation.left);
+        let right = this.handleParam(concatenation.right);
+        return "" + left + right;
     }
 
     private evaluateMathExpression = (mathExpression : g.MathExpression): g.Value => {
@@ -44,20 +56,24 @@ class CellExecutor {
         if(condition == null){
             return true;
         }
-        let left = this.handleParam(condition.left);
-        let right = this.handleParam(condition.right);
+        if(g.isComparison(condition)){
+            let left = this.handleParam(condition.left);
+            let right = this.handleParam(condition.right);
 
-        switch(condition.operator){
-            case "=":
-                return left === right;
-            case "<":
-                return left < right;
-            case ">":
-                return left > right;
-            case ">=":
-                return left >= right;
-            case "<=":
-                return left <= right;
+            switch(condition.operator){
+                case "=":
+                    return left === right;
+                case "<":
+                    return left < right;
+                case ">":
+                    return left > right;
+                case ">=":
+                    return left >= right;
+                case "<=":
+                    return left <= right;
+            }
+        } else {
+            return this.heap[condition.identifier] != null;
         }
     }
 
@@ -73,6 +89,9 @@ class CellExecutor {
         if(params){
             for(let i = 0; i < params.length; i++){
                 this.heap[cell.declarations[i].identifier] = params[i];
+                if(cell.declarations[i].popIdentifier !== "") {
+                    this.heap[cell.declarations[i].popIdentifier] = (<Cube<any>>params[i]).retrieve();
+                }
             }
         }
         for(let direction of cell.directions){
@@ -121,10 +140,18 @@ let executeGrid = (grid : g.Grid, start : g.Position, io : IO, params? : g.Value
             let executor = new CellExecutor(io);
             let executionResult = executor.executeCell(cell,currentParams);
             currentParams = executionResult[1];
+            for(let param of currentParams){
+                if(param instanceof Cube){
+                    param.flip(executionResult[0]);
+                }
+            }
             let traverseResult =  g.traverse(grid, executionResult[0], current);
             current = traverseResult[1];
             cell = traverseResult[0];
         } catch(e){
+            if(e.type !== "exit") {
+                console.log(e);
+            }
             break;
         }
     }

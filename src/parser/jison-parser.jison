@@ -4,12 +4,12 @@
 
 \s+                                 /* Whitespace */;
 (left|right|up|down|end|print)      return "DIRECTION";
-\<[a-zA-Z\_]{1}[a-zA-Z0-9\_]*\>     return "GENERIC";
+\<[a-zA-Z\_]{1}[a-zA-Z0-9\_]*\>     yytext = yytext.slice(1,-1); return "GENERIC";
 [a-zA-Z\_]{1}[a-zA-Z0-9\_]*         return "VAR";
 \-\>                                return "POP";
 \<\-                                return "PUSH";
 (\<|\>|\>\=|\<\=|\=|\!\=)           return "COMPARE";
-\!                                  return "!";
+\?                                  return "EXISTS";
 \,                                  return ",";
 \/                                  return "/";
 \*                                  return "*";
@@ -117,7 +117,7 @@ function
     | DIRECTION "(" ")"
         {$$ = {
             "type": "direction",
-            "direction" : $1
+            "direction": $1
             };
         }
     ;
@@ -132,9 +132,9 @@ params
 param
     : VAR PUSH param
         {$$ = {
-            "type" : "var",
-            "identifier" : $1,
-            "push" : $3
+            "type": "var",
+            "identifier": $1,
+            "push": $3
         };}
     | me
         {$$ = $1}
@@ -148,6 +148,11 @@ condition
             "params": [$1,$3]
             };
         }
+    | VAR EXISTS
+        {$$ = {
+            "type": "exists",
+            "identifier": $1
+        }}
     ;
 
 

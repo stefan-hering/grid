@@ -6,7 +6,7 @@ import * as g from "../grid";
  * It works like a dice. You can flip it around and one side will be on the bottom. On each side you can insert values and retrieve them again one by one in the opposite order.
  * That means this class offers 6 stacks at once. But it gets even better. It's possible to retrieve on the other side, making it work like a queue.
  */
-class Cube<T> {
+export class Cube<T> implements g.Collection {
     private bottomNum = 1;
     private lastMove = g.Angle.DOWN;
     private lastNum = 2;
@@ -14,7 +14,7 @@ class Cube<T> {
         1 : [2,3,5,4],
         2 : [1,4,6,3],
         3 : [1,2,6,5],
-        4 : [1,5,6,3],
+        4 : [1,5,6,2],
         5 : [1,3,6,4],
         6 : [2,4,5,3]
     }
@@ -32,17 +32,21 @@ class Cube<T> {
     public flip(move : g.Angle){
         let x: number;
 
+        // Define the angles in a clockwise motion around the cube
         let angles = [g.Angle.UP, g.Angle.RIGHT, g.Angle.DOWN, g.Angle.LEFT];
-        let index = angles.indexOf(this.lastMove);
-        let targetIndex = index;
-        while(move != angles[targetIndex]){
-            targetIndex++;
-        }
-        index = targetIndex - index;
 
-        let secondLastNum = this.lastNum;
+        // Count how many steps in the array we have to take
+        let prevIndex = angles.indexOf(this.lastMove) + 2;
+        let index = 0;
+        while(move != angles[prevIndex % 4]){
+            prevIndex++; index++;
+        }
+
+        // Offset for the previous position in the array
+        index = (index + this.sides[this.bottomNum].indexOf(this.lastNum)) % 4;
+
         this.lastNum = this.bottomNum;
-        this.bottomNum = this.sides[this.lastNum][secondLastNum];
+        this.bottomNum = this.sides[this.lastNum][index];
         this.lastMove = move;
     }
 
@@ -59,7 +63,7 @@ class Cube<T> {
     }
 
     public insert(val:T){
-        if(this.bottomNum > 2){
+        if(this.bottomNum > 3){
             this.stacks[this.getIndex()].unshift(val);
         } else {
             this.stacks[this.getIndex()].push(val);
@@ -67,10 +71,14 @@ class Cube<T> {
     }
     
     public retrieve():T{
-        if(this.bottomNum > 2){
+        if(this.bottomNum > 3){
             return this.stacks[this.getIndex()].shift();
         } else {
             return this.stacks[this.getIndex()].pop();
         }
+    }
+
+    public getBottom(): number {
+        return this.bottomNum;
     }
 }

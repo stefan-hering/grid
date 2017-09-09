@@ -38,6 +38,7 @@ class Analyzer {
         if(! g.isAngle(direction.direction)){
             return;
         }
+
         let target = g.traverse(this.grid,direction.direction,position);
 
         // match the target grid input params with these params

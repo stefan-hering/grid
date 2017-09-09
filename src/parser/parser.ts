@@ -6,7 +6,6 @@ class Parser {
     private declarations : {[key:string]:g.Type};
     private directions : g.Direction[];
 
-
     private convertMathOperator(operator : string) : g.MathOperator {
         switch(operator){
             case "+":
@@ -42,17 +41,18 @@ class Parser {
     }
 
     private convertCondition(condition : any) : g.Condition {
-        if(condition.type !== "comparison"){
-            throw new ParserError("Expected comparison, got " + condition.type, condition);
+        if(condition.type === "comparison"){
+            let left : g.Param = this.convertParam(condition.params[0]);
+            let right : g.Param = this.convertParam(condition.params[1]);
+    
+            if(g.getTypeOfParam(left) != g.getTypeOfParam(right)){
+                throw new ParserError("Type mismatch", condition);
+            }
+            return new g.Comparison(left,condition.operator,right);
+        } else if(condition.type == "exists") {
+            return new g.ExistsCheck(condition.identifier);
         }
-        let left : g.Param = this.convertParam(condition.params[0]);
-        let right : g.Param = this.convertParam(condition.params[1]);
-
-        if(g.getTypeOfParam(left) != g.getTypeOfParam(right)){
-            throw new ParserError("Type mismatch", condition);
-        }
-
-        return new g.Condition(left,condition.operator,right);
+        throw new ParserError("Expected comparison, got " + condition.type, condition);
     }
 
     private convertConcatenation(concatenation : any) : g.Concatenation{
@@ -82,7 +82,11 @@ class Parser {
         }
         if(param.type === "var"){
             if(param.identifier in this.declarations){
-                return new g.Var(param.identifier,this.declarations[param.identifier]);
+                if(param.push != null) {
+                    return new g.Var(param.identifier,this.declarations[param.identifier],this.convertParam(param.push));
+                } else {
+                    return new g.Var(param.identifier,this.declarations[param.identifier]);
+                }
             } else {
                 throw new ParserError("Unexpected identifier " + param.identifier);
             }
@@ -158,11 +162,16 @@ class Parser {
                 throw new ParserError(declaration.varname + " is already defined");
             }
             this.declarations[declaration.varname] = this.convertType(declaration.type);
+
+            if(declaration.pop != null){
+                this.declarations[declaration.pop] = this.convertType(declaration.generic);
+            }
             let type : g.Type;
 
             parsedDeclarations.push(
                 new g.Declaration(declaration.varname, 
-                    this.convertType(declaration.type))
+                    this.convertType(declaration.type),
+                    declaration.pop)
             );
         }
 

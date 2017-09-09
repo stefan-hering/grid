@@ -10,9 +10,9 @@ gulp.task("jison", function(){
 });
 
 gulp.task("bundle", function () {
-    return gulp.src("./src/webui/webui.ts")
-      .pipe(webpack(require("./webpack.config.js")))
-      .pipe(gulp.dest("./build"));
+      webpack( 
+          require("./webpack.config.js")
+        );
 });
 
 gulp.task("default", [ "jison", "bundle" ]);

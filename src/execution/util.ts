@@ -8,7 +8,7 @@ class ConsoleIO implements IO {
     in = () => {
         return readline();
     }
-    out =(value : g.Type) => {
+    out = (value : g.Type) => {
         console.log(value);
     }
 }

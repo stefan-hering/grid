@@ -53,22 +53,30 @@ class Concatenation {
 
 class Var {
     constructor(public readonly identifier : string,
-        public readonly type : Type){}
+        public readonly type : Type,
+        public readonly pushValue? : Param){}
 }
 
 class Declaration {
     constructor(public readonly identifier: string,
-        public readonly type : Type){}
+        public readonly type : Type,
+        public readonly popIdentifier : string = ""){}
 }
 
-type Value = number | string;
+type Value = number | string | Collection;
 
 type Param = MathExpression | Concatenation | Var | Value;
 
-class Condition {
+type Condition = Comparison | ExistsCheck;
+
+class Comparison {
     constructor(public readonly left : Param,
         public readonly operator : string,
         public readonly right : Param){}
+}
+
+class ExistsCheck {
+    constructor(public readonly identifier : string){}
 }
 
 class Direction {
@@ -81,6 +89,8 @@ class Position {
     constructor(public readonly row: number,
         public readonly cell: number){};
 }
+
+interface Collection {}
 
 
 /**
@@ -113,7 +123,7 @@ let traverse = (g:Grid,d:Angle,p:Position): [RegularCell,Position] => {
                 }
                 break;
             case Angle.RIGHT:
-                position = new Position(position.row, (position.cell + 1) % g.grid.length);
+                position = new Position(position.row, (position.cell + 1) % (g.grid[0].length));
                 break;
         }
         cell = g.cellAt(position);
@@ -121,18 +131,23 @@ let traverse = (g:Grid,d:Angle,p:Position): [RegularCell,Position] => {
     return [cell,position];
 }
 
-// Typeguards for params
+// Typeguards for Grid classes
 function isMathExpression(mathExpression : Param): mathExpression is MathExpression {
     return (<MathExpression>mathExpression).left !== undefined;
 }
-
 function isVar(variable : Param) : variable is Var{
     return (<Var>variable).type !== undefined;
 }
-
 function isAngle(direction : GridFunction) : direction is Angle{
     return ! (typeof direction === "string");
 }
+function isComparison(condition : Condition) : condition is Comparison{
+    return (typeof (<Comparison>condition).operator === "string");
+}
+function isConcatenation(concatenation : Param): concatenation is Concatenation {
+    return (<Concatenation>concatenation).returnType === Type.STRING;
+}
+
 
 let getTypeOfParam = (param : Param): Type =>{
     if(isMathExpression(param)){
@@ -149,5 +164,5 @@ let getTypeOfParam = (param : Param): Type =>{
     }
 }
 
-export {Angle,CellType,Cell,Condition,Concatenation,Declaration,Direction,EmptyCell,Grid,GridFunction,MathExpression,MathOperator,Param,Position,RegularCell,Type,Value,Var};
-export {isMathExpression,isAngle,isVar,traverse,getTypeOfParam};
+export {Angle,CellType,Cell,Collection,Comparison,Condition,Concatenation,Declaration,Direction,EmptyCell,ExistsCheck,Grid,GridFunction,MathExpression,MathOperator,Param,Position,RegularCell,Type,Value,Var};
+export {isAngle,isComparison,isConcatenation,isMathExpression,isVar,traverse,getTypeOfParam};

@@ -1,20 +1,21 @@
-i:number,j:number,q:Cube<string>          |i:number,j:number,q:Cube<string>                   
-                                          |i>0 left(i,j,q <- "".i)                  
-i < j right(i+1,j,q)                      |left(i,j,q <- "no more")                 
-print(j." bottles of beer on the wall".   |                                          
-", 99 bottles of beer.")                  |                                          
-i=99 down(q)                              |                                          
-                                          |                                          
-                                          |                                          
-                                          |                                          
-------------------------------------------@------------------------------------------
-q:Cube<string> right(q)                   |q:Cube<string> -> s                       
-                                          |s != err print("Take one down and pass it"
-                                          |." around,".s." bottles of beer on the ". 
-                                          |"wall.\n\n".s." bottles of beer on the "."
-                                          |wall, ".s." bottles of beer.\n")          
-                                          |s != err left(q)                          
-                                          |end()                                     
-                                          |                                          
-                                          |                                          
-                                          |                                          
+i:number,j:number,q:Cube<string>          |i:number,j:number,q:Cube<string>          |i:number print("Take one down and pass ". 
+                                          |i>0 left(i,j,q <- "".i)                   |"it around, no more bottles of beer on ". 
+i < j right(i+1,j,q)                      |                                          |"the wall."                             ."
+print(j+1." bottles of beer on the wall". |                                          |"                                       ."
+", ".(j+1). " bottles of beer."         ."|                                          |No more bottles of beer on the wall, no".
+")                                        |                                          |" more bottles of beer."                ."
+i=j down(q,j)                             |                                          |Go to the store and buy some more, ".i+1. 
+                                          |                                          |" bottles of beer on the wall.")           
+                                          |                                          |                                          
+                                          |                                          |end()                                     
+------------------------------------------@------------------------------------------@------------------------------------------
+q:Cube<string>,j:number                   |q:Cube<string> -> s,j:number              |i:number                                  
+right(q,j)                                |s ? print("Take one down and pass it"     |print("Take one down and pass it around, "
+                                          |." around, ".s." bottles of beer on the ".|."1 bottle of beer on the wall."        ."
+                                          |"wall."                                 ."|"                                       ."
+                                          |"                                       ."|"                                         
+                                          |".s." bottles of beer on the ".           |                                          
+                                          |"wall, ".s." bottles of beer."          ."|."1 bottle of beer on the wall, 1 ".      
+                                          |")                                        |"bottle of beer."                       ."
+                                          |s ? left(q,j)                             |")                                        
+                                          |right(j)                                  |up(i)                                     
