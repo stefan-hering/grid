@@ -29,6 +29,15 @@ $main-color : #A3C0FF;
     margin : 0 .5rem;
 }
 
+.console {
+    max-height: 20rem;
+    overflow-y: scroll;
+    &-line {
+        margin: 0 1rem;
+        display: block;
+    }
+}
+
 input[type=number] {
     max-width: 60px;
     text-align: center;

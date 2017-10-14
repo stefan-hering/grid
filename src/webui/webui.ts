@@ -1,7 +1,7 @@
 import {Parser} from "../parser/parser";
-import {initUI} from "./components";
+import {initUI} from "./playground";
 
-// Require our static assets first
+// Static assets-
 require("./grid-editor.html");
 require("./editor.scss");
 
@@ -15,7 +15,13 @@ export interface GridEditorSettings {
     params : string;
 }
 
-let settings = {width:"3",height: "3", startX: "1", startY: "1", params:"[1,100]"};
+let settings = {
+    width:"3",
+    height: "3",
+    startX: "1",
+    startY: "1",
+    params:"[1,100]"
+};
 
 let  samples : {[key:string]:string[][]} = {
     "fizzbuzz": [

@@ -34,6 +34,11 @@ module.exports = {
         readline: "empty"
     },
     watch : true,
+    devServer: {
+        contentBase: path.join(__dirname, "dist/webui"),
+        compress: true,
+        port: 9000
+    },
     plugins: [
         new CheckerPlugin(),
       /*  new webpack.ProvidePlugin({
