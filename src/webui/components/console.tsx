@@ -24,8 +24,8 @@ export class Console extends React.Component<ConsoleProps,ConsoleProps> implemen
     render(){
         let output: any;
         if(this.state != null) {
-            output = this.state.lines.map(line => {
-                return <span className="console-line">{line}</span> 
+            output = this.state.lines.map((line, index) => {
+                return <span key={index} className="console-line">{line}</span> 
             });
         } else {
             output = "Grid console";
