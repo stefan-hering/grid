@@ -7,10 +7,8 @@ import * as g from "../grid";
  * That means this class offers 6 stacks at once. But it gets even better. It's possible to retrieve on the other side, making it work like a queue.
  */
 export class Cube<T> implements g.Collection {
-    private bottomNum = 1;
-    private lastMove = g.Angle.DOWN;
-    private lastNum = 2;
-    private sides : {[key:number]:number[]} = {
+    // The sides of the cube with their adjacent sides in clockwise fashion, needed for flipping
+    private readonly sides: {[key:number]:number[]} = {
         1 : [2,3,5,4],
         2 : [1,4,6,3],
         3 : [1,2,6,5],
@@ -18,27 +16,41 @@ export class Cube<T> implements g.Collection {
         5 : [1,3,6,4],
         6 : [2,4,5,3]
     }
-    private stacks : {[key:number]:T[]} = {
+    // The directions ordered in a clockwise fashion, needed for flipping
+    private readonly angles = [g.Angle.UP, g.Angle.RIGHT, g.Angle.DOWN, g.Angle.LEFT];
+    private bottomNum = 1;
+    private lastMove = g.Angle.DOWN;
+    private lastNum = 2;
+    private stacks: {[key:number]:T[]} = {
         1 : [],
         2 : [],
         3 : []
     }
 
-    // When side x is at the bottom, rotate to side y
-    // rotation is determined by index and direction from last time
-    // e.g. x is 1, y is 2, going down
-    // now 2 is bottom and 1 is up, we want to go left, index of 2(0) plus clockwise degrees (90), (0+3%4) -> index 3 -> 3
-    // now 3 is bottom and 2 is right and we go down (1+1%4) -> index 2 -> 6
-    public flip(move : g.Angle){
-        let x: number;
-
-        // Define the angles in a clockwise motion around the cube
-        let angles = [g.Angle.UP, g.Angle.RIGHT, g.Angle.DOWN, g.Angle.LEFT];
+    /** 
+     * Flips the cube in the given direction
+     */
+    public flip(move: g.Angle): void{
+        /* 
+        * Rotation is determined by index and direction from last time
+        * e.g.
+        * 2 is bottom and 1 is facing north
+        * Last direction was down, the next direction is left
+        * 1. Count the amount of steps to take in the sides array
+        *    From the opposite of the last move (+2) count the offset to the desired direction
+        *    => Last move was down (index 2) opposite is up (index 2+2=4 -> 0)
+        *    => Steps needed to go left = 3
+        * 2. In the sides array, look up the index of the previous number
+        *    Add the result from 1. to it to get the index of the next number
+        *    => Current number 2 (sides [1,4,6,3])
+        *    => Index of last number is 0
+        *    => Result from 1. is index 3 => new bottom number is 3
+        */
 
         // Count how many steps in the array we have to take
-        let prevIndex = angles.indexOf(this.lastMove) + 2;
+        let prevIndex = this.angles.indexOf(this.lastMove) + 2;
         let index = 0;
-        while(move != angles[prevIndex % 4]){
+        while(move != this.angles[prevIndex % 4]){
             prevIndex++; index++;
         }
 
@@ -50,7 +62,7 @@ export class Cube<T> implements g.Collection {
         this.lastMove = move;
     }
 
-    private getIndex():number {
+    private getIndex(): number {
         if(this.bottomNum == 6){
             return 1;
         } else if(this.bottomNum == 5){
@@ -62,7 +74,7 @@ export class Cube<T> implements g.Collection {
         }
     }
 
-    public insert(val:T){
+    public insert(val:T): void{
         if(this.bottomNum > 3){
             this.stacks[this.getIndex()].unshift(val);
         } else {
@@ -70,7 +82,7 @@ export class Cube<T> implements g.Collection {
         }
     }
     
-    public retrieve():T{
+    public retrieve(): T{
         if(this.bottomNum > 3){
             return this.stacks[this.getIndex()].shift();
         } else {

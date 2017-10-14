@@ -4,7 +4,7 @@ import { suite, test, slow, timeout } from "mocha-typescript";
 import { expect } from "chai";
 
 suite("Cube", () => {
-    test("Should be flip correctly", () => {
+    test("Should flip correctly", () => {
         let cube = new Cube;
         expect(cube.getBottom()).to.equal(1);
         cube.flip(g.Angle.DOWN);
