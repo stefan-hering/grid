@@ -3,6 +3,7 @@ dist
 coverage
 .vscode
 .nyc_output
+*.DS_STORE
 src/**/*.js
 src/**/*.js.map
 test/**/*.js
