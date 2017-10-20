@@ -12,7 +12,7 @@ export class Console extends React.Component<ConsoleProps,ConsoleProps> implemen
         if(this.lines.length > 1000){
             this.lines.shift();
         }
-        this.lines.push(s);
+        this.lines.push("" + s);
         this.setState({
             lines: this.lines
         });

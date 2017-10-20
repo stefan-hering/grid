@@ -14,9 +14,9 @@ export class Menu extends React.Component<MenuProps,any> {
             <div className="col">
                 <div className="grid-settings grid-settings--size">
                     <label htmlFor="grid-width">Size</label>
-                    <input name="width" type="number" defaultValue={this.props.width} id="grid-width" onChange={this.props.onSettingsChange} />
-                    x 
                     <input name="height" type="number" defaultValue={this.props.height} id="grid-height" onChange={this.props.onSettingsChange} />
+                    x 
+                    <input name="width" type="number" defaultValue={this.props.width} id="grid-width" onChange={this.props.onSettingsChange} />
                     <button className="btn btn-primary grid-button" id="grid-resize" onClick={this.props.triggerRedraw} >Resize</button>
                 </div>
             </div>

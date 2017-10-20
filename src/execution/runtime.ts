@@ -138,7 +138,9 @@ let executeGrid = (grid : g.Grid, start : g.Position, io : IO, params? : g.Value
     if(cell.declarations != null) {
         for(let i = 0; i < cell.declarations.length; i++){  
             if(cell.declarations[i].type != typeof params[i]) {
-                throw new RuntimeError("Parameter mismatch");
+                if (cell.declarations[i].type !== "cube") {
+                    throw new RuntimeError("Parameter mismatch");
+                }
             }
         }
     }  

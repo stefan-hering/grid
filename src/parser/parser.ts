@@ -198,10 +198,16 @@ class ParserError implements Error{
 function parseWholeGrid(texts : string[][]) : g.Grid{
     let cells : g.Cell[][] = [];
     let parser : Parser = new Parser();
-    for(let row of texts){
+    for(let rowIndex = 0; rowIndex < texts.length; rowIndex++) {
+        let row = texts[rowIndex];
         let parsedCells : g.Cell[] = [];
-        for(let cell of row){
-            parsedCells.push(parser.parse(cell));
+        for(let columnIndex = 0; columnIndex < row.length; columnIndex++) {
+            try {
+                parsedCells.push(parser.parse(row[columnIndex]));
+            } catch(e) {
+                e.message = e.message + " in cell " + (rowIndex + 1) + ":" + (columnIndex + 1);
+                throw e;
+            }
         }
         cells.push(parsedCells);
     }

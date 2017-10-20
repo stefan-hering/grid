@@ -8,12 +8,17 @@ class Analyzer {
     };
     public analyzeGrid(){
         // For every cell, check in every direction if params are ok
-        for(let i = 0; i < this.cells.length; i ++){
-            let row = this.cells[i];
-            for (let j = 0; j < row.length; j++) {
-                let cell = row[j];
+        for(let rowIndex = 0; rowIndex < this.cells.length; rowIndex++){
+            let row = this.cells[rowIndex];
+            for (let columnIndex = 0; columnIndex < row.length; columnIndex++) {
+                let cell = row[columnIndex];
                 if(cell instanceof g.RegularCell){
-                    this.checkCell(cell, new g.Position(i,j));
+                    try {
+                        this.checkCell(cell, new g.Position(rowIndex,columnIndex));
+                    } catch(e) {
+                        e.message = e.message + " in cell " + (rowIndex + 1) + ":" + (columnIndex + 1);
+                        throw e;
+                    }
                 }
             }
         }
@@ -27,8 +32,7 @@ class Analyzer {
             }
             // Directions without condition in any place but last means unreachable code
             if(i <  cell.directions.length - 1 && direction.condition == null){
-                throw new AnalyzerError("Unreachable code at position: "
-                    + position.cell + ":" + position.row + " for direction " + direction.direction, position);
+                throw new AnalyzerError("Unreachable code", position);
             }
             this.matchParams(direction, position);
         }
@@ -43,8 +47,13 @@ class Analyzer {
 
         // match the target grid input params with these params
         if(direction.params.length != target[0].declarations.length){
-            throw new AnalyzerError("Not enough or too many parameters at position:" 
-                + position.cell + ":" + position.row + " for direction " + direction.direction, position);
+            let message:string;
+            if(direction.params.length < target[0].declarations.length) {
+                message = "Not enough";
+            } else {
+                message = "Too many"
+            }
+            throw new AnalyzerError(message + " parameters", direction);
         }
 
         for(let i = 0; i < direction.params.length; i++){

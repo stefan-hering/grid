@@ -60,7 +60,32 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
             new g.Position(parseInt(this.currentSettings["startX"],10),parseInt(this.currentSettings["startY"],10)), 
             this.console, eval(this.currentSettings["params"]));
         } catch(e) {
-            this.console.out("" + e);
+            this.console.out(e.message);
+            if(e.source != null) {
+                if(e.source.direction != null) {
+                    let message;
+                    switch(e.source.direction) {
+                        case g.Angle.UP:
+                            message = "up";
+                            break;
+                        case g.Angle.DOWN:
+                            message = "down";
+                            break;
+                        case g.Angle.LEFT:
+                            message = "left";
+                            break;
+                        case g.Angle.RIGHT:
+                            message = "right";
+                            break;
+                        default:
+                            message = e.source.direction;
+                    }
+                    this.console.out("At direction: " + message);
+                } else if(typeof e.source === "string") {
+                    this.console.out(e.source);                    
+                }
+            }
+
         }
     }
 
