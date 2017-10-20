@@ -135,6 +135,14 @@ let executeGrid = (grid : g.Grid, start : g.Position, io : IO, params? : g.Value
     let current : g.Position = start;
     let currentParams = params;
 
+    if(cell.declarations != null) {
+        for(let i = 0; i < cell.declarations.length; i++){  
+            if(cell.declarations[i].type != typeof params[i]) {
+                throw new RuntimeError("Parameter mismatch");
+            }
+        }
+    }  
+
     while(true){
         try {
             let executor = new CellExecutor(io);

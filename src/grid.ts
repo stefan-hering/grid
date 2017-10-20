@@ -12,7 +12,7 @@ enum CellType {
 }
 
 enum Type {
-    NUMBER, STRING, CUBE
+    NUMBER="number", STRING="string", CUBE="cube"
 }
 
 enum MathOperator {

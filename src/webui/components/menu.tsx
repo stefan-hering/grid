@@ -30,6 +30,7 @@ export class Menu extends React.Component<MenuProps,any> {
                     <label htmlFor="grid-width">Params:</label>
                     <input name="params" type="text" defaultValue={this.props.params} id="grid-y" onChange={this.props.onSettingsChange} />
                     <button className="btn btn-primary grid-button" id="grid-run" onClick={this.props.execute} >Run</button>
+                    <a className="grid-help" href="https://github.com/stefan-hering/grid" target="_blank">?</a>
                 </div>
             </div>
         </div>);

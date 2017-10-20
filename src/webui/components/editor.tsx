@@ -23,6 +23,8 @@ export class EditorGrid extends React.Component<EditorGridProps,any> {
 
     componentDidUpdate() {
         this.initEditors();
+        // Need to trigger a resize so editors can redraw properly with their new dimensions
+        window.dispatchEvent(new Event('resize'));
     }
 
     componentDidMount() {
@@ -31,7 +33,7 @@ export class EditorGrid extends React.Component<EditorGridProps,any> {
 
     renderEditor(key : number) {
         return (
-        <div className="col" key={key}>
+        <div className="col editor-container" key={key}>
             <div className="editor"></div>
         </div>);
     }
@@ -43,8 +45,8 @@ export class EditorGrid extends React.Component<EditorGridProps,any> {
             for(let j = 0; j < parseInt(this.props.width,10); j++){
                 cells[j] = this.renderEditor((1+i) * 1000 + j);
             }
-            rows[i] = <div className="row" key={i}>{cells}</div>;
+            rows[i] = <div className="row editor-grid-row" key={i}>{cells}</div>;
         }
-        return <div className="container-fluid">{rows}</div>;
+        return <div className="container-fluid editor-grid">{rows}</div>;
     }
 }

@@ -4,11 +4,15 @@ $main-margin : .5rem .025rem;
 
 $main-color : #A3C0FF;
 
-
 .editor {
-    min-height : 200px;
-    min-width : 200px;
+    min-height : 14rem;
     margin: $main-margin;
+    &-container {
+        min-width : 14rem;
+    }
+    &-grid-row {
+        border-bottom: 1px solid $main-color;
+    }
 }
 
 .grid-menu {
@@ -41,4 +45,11 @@ $main-color : #A3C0FF;
 input[type=number] {
     max-width: 60px;
     text-align: center;
+}
+
+
+@media screen and (min-width: 992px) {
+    .console {
+        max-height : 42rem;
+    }
 }

@@ -5,7 +5,10 @@ import * as g from "../grid";
 import {Menu} from "./components/menu";
 import {EditorGrid} from "./components/editor";
 import {Console} from "./components/console";
+import {Cube as C}  from "../stdlib/cube";
 import {compileAndExecute,ConsoleIO} from "../execution/util";
+
+let Cube = C;
 
 class GridPlayground extends React.Component<GridEditorSettings,any> {
     private currentSettings: {[key:string] : string} = {};
@@ -51,9 +54,14 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
                 grid[row][column] = this.editors[row][column].getValue();
             }
         }
+        this.console.clear();
+        try {
         compileAndExecute(grid,
             new g.Position(parseInt(this.currentSettings["startX"],10),parseInt(this.currentSettings["startY"],10)), 
             this.console, eval(this.currentSettings["params"]));
+        } catch(e) {
+            this.console.out("" + e);
+        }
     }
 
     render(){
@@ -65,10 +73,10 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
             </div>
             <div className="container-fluid">
                 <div className="row">
-                    <div className="col-12 grid-editors" id="grid-editors">
+                    <div className="col-12 col-lg-9 grid-editors" id="grid-editors">
                         <EditorGrid setEditor={this.setEditor} {...this.state} />
                     </div>
-                    <div className="col" id="grid-output">
+                    <div className="col-12 col-lg-3" id="grid-output">
                         <Console 
                             ref={(c) => {
                                 this.console = c;

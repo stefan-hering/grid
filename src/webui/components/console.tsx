@@ -21,6 +21,10 @@ export class Console extends React.Component<ConsoleProps,ConsoleProps> implemen
         return "";
     }
 
+    clear = () => {
+        this.lines = [];
+    }
+
     render(){
         let output: any;
         if(this.state != null) {
