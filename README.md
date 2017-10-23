@@ -60,3 +60,7 @@ left(foo <- "Value")
 ```
 
 When entering and retrieving values from the cube the side of the cube that currently on the bottom is important. Values that have been inserted can either be retrieved from the same side (works like pop on a stack) or on the other side (works like dequeue on a queue). For example, if the cube is flipped right 1 time, the inserted elements cannot be retried. If the cube is flipped right again, the elements can be dequeued. If the cube is flipped right 2 more times, the elements can be popped.
+
+## Demo page
+
+https://stefan-hering.github.io/
