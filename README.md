@@ -44,13 +44,13 @@ There are `number` and `string` and
 A cube is an incredible datastructure with 6 sides that can work as 6 stacks or as 3 queues or any combination of those. It has a generic type indicating which of the other 2 datatypes it holds. Each movement on the grid in a certain direction also flips the cube in that direction. A cube is declared in the parameters like this:
 
 ```
-foo: cube<string>
+foo: Cube<string>
 ```
 
 In a grid cell a single value can be retrieved from the cube with the -> operator:
 
 ```
-foo: cube<string> -> bar
+foo: Cube<string> -> bar
 ```
 
 Values can be inserted into the cube when going in a direction with the <- operator:

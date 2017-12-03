@@ -4,8 +4,10 @@ import {GridEditorSettings} from "../webui";
 let ace = require('brace');
 require('brace/theme/dreamweaver');
 
-interface EditorGridProps extends GridEditorSettings{
+interface EditorGridProps {
     readonly setEditor : (row : number, column : number, editor : any) => void;
+    readonly width : string;
+    readonly height : string;
 }
 
 export class EditorGrid extends React.Component<EditorGridProps,any> {

@@ -1,14 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {GridEditorSettings} from "./webui";
+import {GridEditorSettings,SerializableGrid} from "./webui";
 import * as g from "../grid";
 import {Menu} from "./components/menu";
 import {EditorGrid} from "./components/editor";
 import {Console} from "./components/console";
-import {Cube as C}  from "../stdlib/cube";
+import {Cube}  from "../stdlib/cube";
 import {compileAndExecute,ConsoleIO} from "../execution/util";
-
-let Cube = C;
 
 class GridPlayground extends React.Component<GridEditorSettings,any> {
     private currentSettings: {[key:string] : string} = {};
@@ -37,11 +35,47 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
     }
 
     setValues = (grid : string[][]) => {
+        // First clear every editor
+        for(let row = 0; row < this.state.height; row++){
+            for(let column = 0; column < this.state.width; column++){
+                this.editors[row][column].setValue("");
+            }
+        }
+        this.currentSettings["width"] = grid[0].length.toString();
+        this.currentSettings["height"] = grid.length.toString();
+        (this.refs.menu as any).setValues(this.currentSettings);
+        this.gridResize();
         for(let row = 0; row < grid.length; row++){
             for(let column = 0; column < grid[row].length; column++){
                 this.editors[row][column].setValue(grid[row][column]);
             }
         }
+    }
+
+    save = (fileName: string) => {
+        let cells : string[][] = [];
+        for(let editorRow of this.editors) {
+            let row : string[] = [];
+            for(let editor of editorRow) {
+                row.push(editor.getValue());
+            }
+            cells.push(row);
+        }
+        let gridToSave: SerializableGrid = {
+            cells : cells,
+            settings : this.currentSettings as any
+        }
+        localStorage.setItem("grid-"+fileName, JSON.stringify(gridToSave));
+        let savedGrids = JSON.parse(localStorage.getItem("savedGrids"));
+        savedGrids.push(fileName);
+        localStorage.setItem("savedGrids",JSON.stringify(savedGrids));
+    }
+
+    load = (fileName: string) => {
+        let loadedGrid = JSON.parse(localStorage.getItem("grid-" + fileName));
+        this.currentSettings = loadedGrid.settings;
+        this.gridResize();
+        this.setValues(loadedGrid.cells);
     }
 
     execute = () => {
@@ -56,9 +90,11 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
         }
         this.console.clear();
         try {
-        compileAndExecute(grid,
-            new g.Position(parseInt(this.currentSettings["startX"],10),parseInt(this.currentSettings["startY"],10)), 
-            this.console, eval(this.currentSettings["params"]));
+            compileAndExecute(grid,
+                new g.Position(parseInt(this.currentSettings["startX"],10),
+                    parseInt(this.currentSettings["startY"],10)), 
+                this.console,
+                eval(this.currentSettings["params"]));
         } catch(e) {
             this.console.out(e.message);
             if(e.source != null) {
@@ -93,13 +129,24 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
         return (
         <div id="playground">
             <div className="container-fluid grid-menu" id="grid-menu">
-                <Menu onSettingsChange={this.settingChanged} triggerRedraw={this.gridResize} 
-                    execute={this.execute} {...this.props} />
+                <Menu ref="menu"
+                    onSettingsChange={this.settingChanged} 
+                    triggerRedraw={this.gridResize} 
+                    execute={this.execute} 
+                    save={this.save}
+                    load={this.load}
+                    height={this.state.height}
+                    width={this.state.width}
+                    startX={this.state.startX}
+                    startY={this.state.startY}
+                    params={this.state.params} />
             </div>
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12 col-lg-9 grid-editors" id="grid-editors">
-                        <EditorGrid setEditor={this.setEditor} {...this.state} />
+                        <EditorGrid setEditor={this.setEditor} 
+                            width={this.state.width} 
+                            height={this.state.height} />
                     </div>
                     <div className="col-12 col-lg-3" id="grid-output">
                         <Console 
@@ -113,12 +160,12 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
     }
 }
 
-let initUI = (settings : GridEditorSettings, initialValues? : string[][]) =>{
-    let playground : any = ReactDOM.render(<GridPlayground {...settings} />, 
+let initUI = (grid: SerializableGrid) =>{
+    let playground : any = ReactDOM.render(<GridPlayground {...grid.settings} />, 
         document.querySelector("#content"));
 
-    if(initialValues != null){
-        playground.setValues(initialValues);
+    if(grid.cells != null){
+        playground.setValues(grid.cells);
     }
 }
 
