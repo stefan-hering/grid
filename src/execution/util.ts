@@ -12,9 +12,10 @@ class ConsoleIO implements IO {
     out = (value : g.Type) => {
         console.log(value);
     }
+    kill = false;
 }
 
-let compileAndExecute = (grid : string[][], start : g.Position, io : IO, params? : any[]): void => {
+let compileAndExecute = (grid : string[][], start : g.Position, io : IO, params? : any[], runAsync : boolean = false): void => {
     let parsedGrid : g.Grid = parseWholeGrid(grid);
     new Analyzer(parsedGrid).analyzeGrid();
     
@@ -27,7 +28,7 @@ let compileAndExecute = (grid : string[][], start : g.Position, io : IO, params?
             params[i] = cube;
         }
     }
-    executeGrid(parsedGrid,start,io,params);
+    executeGrid(parsedGrid,start,io,params,runAsync);
 }
 
 export {compileAndExecute,ConsoleIO}

@@ -140,7 +140,7 @@ export class Menu extends React.Component<MenuProps,any> {
                 load={this.props.load} />,
             document.getElementById("modal")
         );
-        $("#modal").children(".modal").modal();
+        (window as any).$("#modal").children(".modal").modal();
     }
 
     setValues = (values: GridEditorSettings) => {

@@ -3,6 +3,7 @@
 $main-margin : .5rem .025rem;
 
 $main-color : #A3C0FF;
+$alert-color : #DC0313;
 
 .editor {
     min-height : 14rem;
@@ -34,19 +35,34 @@ $main-color : #A3C0FF;
 }
 
 .console {
-    max-height: 20rem;
-    overflow-y: scroll;
+    position : relative;
+    &-output {
+        min-height : 2rem;
+        max-height : 50rem;
+        overflow-y : scroll;
+    }
     &-line {
-        margin: 0 1rem;
-        display: block;
+        margin : 0 1rem;
+        display : block;
     }
 }
 
-input[type=number] {
-    max-width: 60px;
-    text-align: center;
+.grid-kill {
+    position : absolute;
+    top : .5rem;
+    right : 2rem;
+    color : $alert-color;
+    font-weight : bold;
 }
 
+.grid-help {
+    color : white;
+}
+
+input[type=number] {
+    max-width : 60px;
+    text-align : center;
+}
 
 @media screen and (min-width: 992px) {
     .console {

@@ -125,9 +125,11 @@ class EndError extends RuntimeError{
 interface IO {
     out : (o:g.Value) => void;
     in : () => string;
+    kill : boolean;
 }
 
-let executeGrid = (grid : g.Grid, start : g.Position, io : IO, params? : g.Value[]): void => {
+
+let executeGrid = async (grid : g.Grid, start : g.Position, io : IO, params? : g.Value[], runAsync : boolean = false): Promise<void>  => {
     let cell : g.Cell = grid.cellAt(start);
     if(cell.type !== g.CellType.REGULAR){
         throw new RuntimeError("Trying to start at empty cell");
@@ -147,6 +149,13 @@ let executeGrid = (grid : g.Grid, start : g.Position, io : IO, params? : g.Value
 
     while(true){
         try {
+            if(io.kill){
+                break;
+            }
+            // Very necessary to not crash the browser
+            if(runAsync) {
+                await new Promise(_ => setTimeout(_, 1));
+            }
             let executor = new CellExecutor(io);
             let executionResult = executor.executeCell(cell,currentParams);
             currentParams = executionResult[1];

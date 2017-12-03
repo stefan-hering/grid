@@ -94,7 +94,8 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
                 new g.Position(parseInt(this.currentSettings["startX"],10),
                     parseInt(this.currentSettings["startY"],10)), 
                 this.console,
-                eval(this.currentSettings["params"]));
+                eval(this.currentSettings["params"]),
+                true);
         } catch(e) {
             this.console.out(e.message);
             if(e.source != null) {

@@ -21,8 +21,17 @@ export class Console extends React.Component<ConsoleProps,ConsoleProps> implemen
         return "";
     }
 
+    kill = false;
+
     clear = () => {
         this.lines = [];
+    }
+
+    toggleKill = () => {
+        this.kill = true;
+        setTimeout(() => {
+            this.kill = false;
+        }, 100);
     }
 
     render(){
@@ -36,7 +45,10 @@ export class Console extends React.Component<ConsoleProps,ConsoleProps> implemen
         }
         return (
         <div className="console">
-            {output}
+            <span className="grid-kill" onClick={this.toggleKill}>X</span>
+            <div className="console-output">
+                {output}
+            </div>
         </div>);
     }
 }

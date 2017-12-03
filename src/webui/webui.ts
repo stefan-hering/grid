@@ -41,7 +41,7 @@ let samples = {
             width : "3",
             height : "3",
             startX : "1",
-            startY : "0",
+            startY : "1",
             params : "[1,100]"
         }
     },

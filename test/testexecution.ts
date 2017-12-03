@@ -21,7 +21,8 @@ suite("Executor", () => {
             },
             out : (o : g.Value) => {
                 actualResult.push(o);
-            }
+            },
+            kill : false
         }
         executeGrid(parsedGrid, new g.Position(1,1),io,[1,16]);
         expect(targetResult).to.deep.equal(actualResult);
@@ -338,7 +339,8 @@ suite("Executor", () => {
             },
             out : (o : g.Value) => {
                 actualResult = actualResult + o;
-            }
+            },
+            kill : false
         };
 
         executeGrid(parsedGrid, new g.Position(0,0),io,[1,98,new Cube<string>()]);
