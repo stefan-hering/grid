@@ -21,7 +21,7 @@ Every cell starts with parameters, seperated by comma, each with a type associat
 
 After the parameters the directions are declared. A direction consists out of an optional condition and one of the directions. The direction itself can have 0 or more parameters.
 
-Whitespace does not matter. String concatenation is done with `.`.
+Whitespace does not matter. Usual math operators work `+`, `-`, `*`, `/`, `%`. String concatenation is done with `.`. Checking if a variable exists is done with `?`.
 
 ### Example cell:
 
@@ -60,6 +60,17 @@ left(foo <- "Value")
 ```
 
 When entering and retrieving values from the cube the side of the cube that currently on the bottom is important. Values that have been inserted can either be retrieved from the same side (works like pop on a stack) or on the other side (works like dequeue on a queue). For example, if the cube is flipped right 1 time, the inserted elements cannot be retried. If the cube is flipped right again, the elements can be dequeued. If the cube is flipped right 2 more times, the elements can be popped.
+
+## Using this repo
+
+Before doing anything, compile the jison by running gulp:
+
+```
+gulp jison
+```
+
+Running test can simply be done with `npm test`, bundling the demo ui is done with webpack `npm run build`.
+
 
 ## Demo page
 
