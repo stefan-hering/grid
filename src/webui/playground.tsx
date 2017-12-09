@@ -75,7 +75,10 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
         let loadedGrid = JSON.parse(localStorage.getItem("grid-" + fileName));
         this.currentSettings = loadedGrid.settings;
         this.gridResize();
-        this.setValues(loadedGrid.cells);
+        //TODO lazy hack to wait for react to redraw
+        setTimeout(() => {
+            this.setValues(loadedGrid.cells);
+        },100);
     }
 
     execute = () => {
@@ -126,7 +129,7 @@ class GridPlayground extends React.Component<GridEditorSettings,any> {
         }
     }
 
-    render(){
+    render() {
         return (
         <div id="playground">
             <div className="container-fluid grid-menu" id="grid-menu">
